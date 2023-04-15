@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poly.persistance.mapper.ChartMapper">
+<!-- <select id="getWeekGender" resultType="ChartDTO">
+SELECT 
+	TO_CHAR(COI.ORD_DT_DATE,'YYYY-MM-DD') AS regDate, 
+	NVL(M.COUNT,0) AS male_count, 
+	NVL(F.COUNT,0) AS female_count
+FROM
+	CAFE_ORDER_INFO COI 
+	LEFT OUTER JOIN
+	(
+	SELECT 
+		COUNT(COI.ORD_INFO_NO) AS count, 
+		COI.ORD_DT_DATE AS ordDtDate
+	FROM 
+		CAFE_ORDER_INFO COI, 
+		USER_CAFE UC 
+	WHERE 
+		COI.USER_NO = UC.USER_NO 
+		AND 
+		UC.GENDER = '남자' 
+ 	GROUP BY 
+ 		TO_CHAR(COI.ORD_DT_DATE,'YYYY-MM-DD'), 
+ 		UC.GENDER 
+ 	) 
+ 	M ON O.ORD_DT_DATE = M.ORD_DT_DATE
+  	LEFT OUTER JOIN
+	(
+	SELECT 
+		COUNT(COI.ORD_INFO_NO) AS count, 
+		COI.ORD_DT_DATE AS ORD_DT_DATE 
+	FROM 
+		CAFE_ORDER_INFO COI, 
+		USER_CAFE UC 
+	WHERE 
+		COI.USER_NO = UC.USER_NO 
+		AND 
+		UC.GENDER = '여자' 
+  	 GROUP BY 
+  	 	TO_CHAR(COI.ORD_DT_DATE,'YYYY-MM-DD'), 
+  	 	UC.GENDER
+  	 ) 
+  	 F ON COI.ORD_DT_DATE = F.ORD_DT_DATE
+GROUP BY 
+	TO_CHAR(COI.ORD_DT_DATE,'YYYY-MM-DD') 
+</select> -->
+<!-- <select id="getMale" resultType="ChartDTO">
+SELECT 
+	TO_CHAR(COI.ORD_DT_DATE,'YYYY-MM-DD') AS regDate,
+	COUNT(COI.ORD_INFO_NO) AS male_count
+FROM
+	CAFE_ORDER_INFO COI,
+	USER_CAFE UC
+WHERE
+	UC.USER_NO = COI.USER_NO
+	AND
+		UC.GENDER = '남자'
+GROUP BY
+	TO_CHAR(COI.ORD_DT_DATE, 'YYYY-MM-DD')
+</select>
+<select id="getFemale" resultType="ChartDTO">
+SELECT 
+	TO_CHAR(COI.ORD_DT_DATE,'YYYY-MM-DD') AS regDate,
+	COUNT(COI.ORD_INFO_NO) AS female_count
+FROM
+	CAFE_ORDER_INFO COI,
+	USER_CAFE UC
+WHERE
+	UC.USER_NO = COI.USER_NO
+	AND
+		UC.GENDER = '여자'
+GROUP BY
+	TO_CHAR(COI.ORD_DT_DATE, 'YYYY-MM-DD')
+</select> -->
+</mapper>

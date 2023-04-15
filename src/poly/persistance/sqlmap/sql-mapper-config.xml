@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+    	<!-- 사용할 DTO 등록  -->
+		<typeAlias type="poly.dto.NoticeDTO" alias="NoticeDTO"/>
+		<typeAlias type="poly.dto.UserDTO" alias="UserDTO"/>
+		<typeAlias type="poly.dto.ReviewDTO" alias="ReviewDTO"/>
+		<typeAlias type="poly.dto.MenuDTO" alias="MenuDTO"/>
+		<typeAlias type="poly.dto.CafeAttachDTO" alias="CafeAttachDTO"/>
+		<typeAlias type="poly.dto.OrderInfoDTO" alias="OrderInfoDTO"/>
+		<typeAlias type="poly.dto.OrderItemDTO" alias="OrderItemDTO"/>
+		<typeAlias type="poly.dto.TotalOrderInfoDTO" alias="TotalOrderInfoDTO"/>
+		<typeAlias type="poly.dto.TotalOrderItemDTO" alias="TotalOrderItemDTO"/>
+		<typeAlias type="poly.dto.TotalOrderDTO" alias="TotalOrderDTO"/>
+		<typeAlias type="poly.dto.TmpDTO" alias="TmpDTO"/>
+		<typeAlias type="poly.dto.CafeInfoDTO" alias="CafeInfoDTO"/>
+		<typeAlias type="poly.dto.ApiDTO" alias="ApiDTO"/>
+		<typeAlias type="poly.dto.ChartDTO" alias="ChartDTO"/>
+    </typeAliases>
+</configuration>

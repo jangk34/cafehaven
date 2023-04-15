@@ -1,0 +1,346 @@
+/* 윤영 */
+@charset "UTF-8";
+/* order css start */
+.orderHead{
+	height: 45px;
+	max-width: 100%;
+	padding-top: 8px;
+	margin-bottom: 5px;
+	background-color: #7F7F7F;
+	color: #fff;
+	text-align: center;
+	font-size: 20px;
+	font-weight: 700;
+}
+.orderSelect{
+	width: 100%;
+    height: 40px;
+}
+/* order css end */
+
+/* tmp css start */
+.tmpBasketOrder, .tmpBasketKeepShopping, .tmpBasketSelectDeleteButton{
+	text-indent: 0;
+    border: 1px solid #dcdcdc;
+    color: #fff;
+    font-family: Arial;
+    font-size: 19px;
+    font-weight: 700;
+    font-style: normal;
+    height: 50px;
+    line-height: 40px;
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+}
+.tmpBasketOrder{
+	background-color: #E90101;
+	margin-top: 8px;
+}
+.tmpBasketKeepShopping, .tmpBasketSelectDeleteButton{
+	background-color: #7f7f7f;
+    display: inline-block;
+}
+/* home style */
+#logo_img{
+	position : relative;
+	margin : 0 auto;
+}
+#s_input{
+	position : relative;
+	float: left;
+	font-size : 16px;
+	padding: 0px 8px;
+	color: rgb(100,100,100);
+	outline : none;
+	backfround-color:(255,255,255);
+}
+/* #s_button{
+	position : relative;
+	float:left;
+	width:30px;
+	height:30px;
+	background-image:url('https://dcicons.s3.amazonaws.com/dicons/img/main/ms_button.png');
+	background-size : 30px 30px;
+	background-color : #f6f5ef;
+	outline : none;
+} */
+/* footer css */
+/*******************************************************************************************
+	하단영역 초기값 설정
+	.footer > container > .footMenuWrap + .copy + .familyWrap
+********************************************************************************************/
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+	margin-bottom: 0px; 
+}
+
+footer {
+	display: block;
+}
+
+.footer {
+	bottom: 0px;
+	width: 100%;
+	height: 76px; /* Set the fixed height of the footer here */
+	line-height: 20px; /* Vertically center the text there */
+	background-color: #f5f5f5;
+}
+
+.footer>.container {
+	width: auto;
+	max-width: 680px;
+	padding: 15px 15px;
+	padding: 0 15px;
+}
+
+.footer .footMenuWrap {
+	margin: 11px 0 24px;
+}
+
+.footer .footMenuWrap:after {
+	content: "";
+	display: block;
+	clear: both;
+	height: 0;
+	visibility: hidden;
+}
+
+.footer .footMenuWrap li {
+	display: none;
+	float: left;
+	position: relative;
+	width: 50%;
+	text-align: center;
+}
+
+.footer .footMenuWrap li:after {
+	content: "";
+	display: block;
+	clear: both;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 1px;
+	height: 10px;
+	margin-top: -5px;
+	background: #d9d9d9;
+}
+
+.footer .footMenuWrap li.sitemap, .footer .footMenuWrap li.contact {
+	display: block;
+}
+
+.footer .footMenuWrap li.contact:after {
+	display: none;
+}
+
+.footer .footMenuWrap li>a {
+	display: inline-block;
+	padding: 3px 0;
+	font-size: 1.3rem;
+}
+
+.footer .copy {
+	padding: 0 55px;
+	font-size: 1.2rem;
+	text-align: center;
+}
+
+.footer .familyWrap {
+	display: none;
+}
+/* 하단영역 설정 */
+.footer {
+/* 	margin-top: 60px; */
+	background: #f6f5ef;
+}
+
+.footer>.container {
+	position: relative;
+	margin: 0 auto;
+}
+
+.footer .footMenuWrap {
+	margin: 26px 0 5px;
+}
+
+.footer .footMenuWrap li {
+	display: block;
+	width: auto;
+	text-align: left;
+}
+
+.footer .footMenuWrap li:after {
+	height: 12px;
+	margin-top: -7px;
+	background: #777;
+}
+
+.footer .footMenuWrap li:first-child:after {
+	display: none;
+}
+
+.footer .footMenuWrap li.contact:after {
+	display: block;
+}
+
+.footer .footMenuWrap li>a {
+	padding-right: 8px;
+	padding-left: 8px;
+}
+
+.footer .footMenuWrap li:first-child>a {
+	padding-left: 0;
+}
+
+.footer .copy {
+	padding: 12px;
+	font-size: 1.4rem;
+	text-align: center;
+}
+
+.footer .familyWrap {
+	display: block;
+}
+
+.familyWrap.active .btnFamily {
+	background-position: 100% 100%;
+}
+
+.familyWrap.active .familyArea {
+	display: block;
+}
+
+.familyWrap .btnFamily {
+	position: absolute;
+	top: 0;
+	right: 15px;
+	padding: 11px 10px 7px;
+	border: 1px solid #ddd;
+	background: url('/images/front/icon/ico_familymap_pc.png') no-repeat
+		100% 13px;
+	font-size: 1.2rem;
+	color: #666;
+	line-height: 1;
+	text-align: left;
+}
+
+.familyWrap .familyArea {
+	display: none;
+	position: absolute;
+	right: 15px;
+	bottom: 97px;
+	z-index: 150;
+}
+
+.familyArea .container {
+	border: 1px solid #d9d9d9;
+	background-color: #fff;
+	box-sizing: border-box;
+}
+
+.familyArea .container:after {
+	content: "";
+	display: block;
+	clear: both;
+	height: 0;
+	visibility: hidden;
+}
+
+.familyArea .container:before {
+	content: "";
+	display: block;
+	overflow: hidden;
+	clear: both;
+	position: absolute;
+	right: 39px;
+	bottom: -19px;
+	width: 29px;
+	height: 20px;
+	background: url('../img/common/bg_familymap_pc.png') no-repeat 0 0;
+}
+
+.familyArea a {
+	display: block;
+	padding-right: 10px;
+	font-size: 1.2rem;
+	color: #222;
+	word-wrap: break-word;
+}
+
+.familyArea dl {
+	padding: 0 30px 30px 30px;
+	border-left: 1px solid #d9d9d9;
+}
+
+.familyArea dl:first-child {
+	border-left: none;
+}
+
+.familyArea dl:after {
+	content: "";
+	display: block;
+	clear: both;
+	height: 0;
+	visibility: hidden;
+}
+
+.familyArea dt {
+	margin-bottom: 10px;
+	padding: 20px 0;
+	border-bottom: 1px solid #222;
+	font-size: 1.6rem;
+	color: #2a6eb6;
+}
+
+.familyArea dd {
+	padding: 10px 0;
+}
+
+.familyArea ul {
+	margin-bottom: -10px;
+}
+
+.familyArea ul li {
+	padding: 10px 0;
+}
+
+.familyArea ul li a {
+	position: relative;
+	padding-left: 10px;
+	color: #777;
+}
+
+.familyArea ul li a:before {
+	content: "-";
+	display: inline-block;
+	overflow: hidden;
+	clear: both;
+	position: absolute;
+	left: 0;
+}
+
+.familyArea .corp, .familyArea .related {
+	width: 40%;
+}
+
+.familyArea .corp dd, .familyArea .related dd {
+	float: left;
+	width: 50%;
+}
+
+.familyArea .corp dd {
+	min-height: 40px;
+}
+ul, ol, li {
+	list-style-type: none;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+}
+

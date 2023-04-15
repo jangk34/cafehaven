@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.MenuMapper">
+<!-- 메뉴등록  전체 -->
+<!--  메뉴 등록 -->
+
+<insert id ="insertMenu" parameterType="MenuDTO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+
+<!-- 오라클 mysql 쓰는법 다름 http://egloos.zum.com/kamsi76/v/377946 일단 상관없음-->
+
+INSERT INTO
+CAFE_MENU(
+MENU_NO,
+MENU_NAME,
+MENU_INTRO,
+MENU_PRICE,
+MENU_AMOUNT,
+MENU_CG_NO,
+REGNO,
+REGDATE
+)VALUES(
+'MENU'||MENU_NO.NEXTVAL,
+#{menuName},
+#{menuIntro},
+#{menuPrice},
+#{menuAmount},
+#{menuCgNo},
+1,
+SYSDATE
+)
+<selectKey  resultType="string" keyProperty="menuNo" order="AFTER" >
+	SELECT 'MENU'||MENU_NO.CURRVAL AS MENU_NO FROM DUAL
+</selectKey>
+
+<!-- SELECT LAST_INSERT_ID() 리턴값은 parameterType에 넘겨준 객체에 넘어간다  getMenuNo -->
+</insert>
+<!-- 관리를 위해 첨부 테이블     이건 좀 고민을 해봐야됨  menu_no 부분에서 분류할때 문제있을거같음     -->
+<insert id="insertMenuAttach"  parameterType="CafeAttachDTO" >
+
+INSERT INTO
+CAFE_ATTACH(
+CAFE_ATTACH_NO,
+MENU_NO,
+CAFE_IMG,
+CAFE_IMG_PATH,
+CAFE_IMG_ORG,
+REGNO,
+REGDATE,
+MENU_CG_NO
+)VALUES(
+CAFE_ATTACH_NO.NEXTVAL,
+#{menuNo},<!--  이거를 menu에 있는 메뉴 no 와 일치해야됨 -->
+#{cafeImg},
+#{cafeImgPath},
+#{cafeImgOrg},
+1,
+SYSDATE,
+#{menuCgNo}
+)
+</insert>
+<!--  메뉴 등록 끝 -->
+<!-- 메뉴 리스트  글-->
+<select id="getMenuList" resultType="MenuDTO">
+SELECT 
+	MENU_NO AS "MENUNO",
+	MENU_NAME AS "MENUNAME",
+	MENU_INTRO AS "MENUINTRO",
+	MENU_PRICE AS "MENUPRICE",
+	MENU_CG_NO AS "MENUCGNO",
+	MENU_AMOUNT AS "MENUAMOUNT",
+	REGNO,
+	REGDATE,
+	UPDNO,
+	UPDDATE
+FROM 
+	CAFE_MENU
+</select> 
+<select id="getMenuListImg" resultType="CafeAttachDTO">
+SELECT
+	CAFE_ATTACH_NO AS "CAFEATTACHNO",
+	CAFE_NO AS "CAFENO",
+	MENU_NO AS "MENUNO",
+	CAFE_IMG_ORG AS "CAFEIMGORG",
+	CAFE_IMG_PATH AS "CAFEIMGPATH",
+	CAFE_IMG AS "CAFEIMG",
+	REGNO,
+	REGDATE,
+	UPDNO,
+	UPDDATE
+FROM 
+	CAFE_ATTACH
+</select>
+<!--  업데이트 뷰 상세보기 글 사진 -->
+<select id="getMenuDetail" parameterType="string" resultType="MenuDTO">
+SELECT 
+	MENU_NO AS "MENUNO",
+	MENU_NAME AS "MENUNAME",
+	MENU_INTRO AS "MENUINTRO",
+	MENU_PRICE AS "MENUPRICE",
+	MENU_CG_NO AS "MENUCGNO",
+	MENU_AMOUNT AS "MENUAMOUNT",
+	REGNO,
+	REGDATE,
+	UPDNO,
+	UPDDATE
+FROM 
+	CAFE_MENU
+WHERE
+MENU_NO=#{menuNo}
+</select>
+<!-- 업데이트 뷰 상세보기 사진 -->
+<select id="getMenuImgDetail" parameterType="string" resultType="CafeAttachDTO">
+SELECT
+	CAFE_ATTACH_NO AS "CAFEATTACHNO",
+	CAFE_NO AS "CAFENO",
+	MENU_NO AS "MENUNO",
+	CAFE_IMG_ORG AS "CAFEIMGORG",
+	CAFE_IMG_PATH AS "CAFEIMGPATH",
+	CAFE_IMG AS "CAFEIMG",
+	REGNO,
+	REGDATE,
+	UPDNO,
+	UPDDATE
+FROM 
+	CAFE_ATTACH
+WHERE
+MENU_NO=#{menuNo}
+</select>
+<!-- 업데이트 글  -->
+<update id="updateMenuDetail" parameterType="MenuDTO">
+UPDATE 
+	CAFE_MENU
+SET
+	MENU_NAME=#{menuName},
+	MENU_INTRO=#{menuIntro},
+	MENU_PRICE=#{menuPrice},
+	MENU_AMOUNT=#{menuAmount},
+	MENU_CG_NO=#{menuCgNo},
+	REGDATE=TO_DATE(#{regDate},'YYYY-MM-DD HH24:mi:ss'),<!--  이부분이 문제 다른 것들은 업데이트 되었는데  #{regDate} 가 string으로 받아오니 이걸 date 형식으로 -->
+	UPDDATE=SYSDATE,
+	UPDNO=1	
+WHERE
+	MENU_NO=#{menuNo}
+</update>
+<!-- MENU_CG_NO=#{menuCgNo}, -->
+<!-- 이미지 파일  삭제 -->
+<delete id="deleteMenuImg" parameterType="CafeAttachDTO">
+DELETE FROM
+	CAFE_ATTACH
+WHERE MENU_NO=#{menuNo}
+</delete>
+<!--이미지 파일 삭제 후등록 -->
+<insert id="insertMenuImg" parameterType="CafeAttachDTO">
+
+INSERT INTO
+CAFE_ATTACH(
+CAFE_ATTACH_NO,
+MENU_NO,
+CAFE_IMG,
+CAFE_IMG_PATH,
+CAFE_IMG_ORG,
+REGNO,
+REGDATE,
+UPDNO,
+UPDDATE
+)VALUES(
+CAFE_ATTACH_NO.NEXTVAL,
+#{menuNo},
+#{cafeImg},
+#{cafeImgPath},
+#{cafeImgOrg},
+1,
+TO_DATE(#{regDate},'YYYY-MM-DD HH24:mi:ss'),
+1,
+SYSDATE
+)
+</insert>
+<!-- 메뉴 글삭제 -->
+<delete id="deleteMenuDetail" parameterType="MenuDTO" >
+DELETE FROM CAFE_MENU
+WHERE MENU_NO=#{menuNo}
+</delete>
+
+<!-- 사용자 메뉴 글 조회<윤영> -->
+<select id="getUserMenuList" parameterType="MenuDTO" resultType="MenuDTO">
+	SELECT
+		M.MENU_NO AS "MENUNO",
+		M.MENU_NAME AS "MENUNAME",
+		M.MENU_INTRO AS "MENUINTRO",
+		M.MENU_PRICE AS "MENUPRICE",
+		M.MENU_AMOUNT AS "MENUAMOUNT",
+		M.MENU_CG_NO AS "MENUCGNO",
+		M.REGNO AS "REGNO",
+		M.REGDATE AS "REGDATE",
+		M.UPDNO AS "UPDNO",
+		M.UPDDATE AS "UPDDATE"
+	FROM
+		CAFE_MENU M, CAFE_ATTACH CA
+	WHERE
+		M.MENU_NO=CA.MENU_NO
+	AND
+		M.MENU_CG_NO=#{menuCgNo}
+</select>
+<!-- 사용자 메뉴 사진 조회<윤영> -->
+<select id="getUserMenuListImg" parameterType="CafeAttachDTO" resultType="CafeAttachDTO">
+	SELECT
+		CA.CAFE_ATTACH_NO AS "CAFEATTACHNO", 
+		CA.CAFE_NO AS "CAFENO",
+		CA.MENU_NO AS "MENUNO",
+		CA.CAFE_IMG_ORG AS "CAFEIMGORG",
+		CA.CAFE_IMG_PATH AS "CAFEIMGPATH",
+		CA.CAFE_IMG AS "CAFEIMG",
+		CA.MENU_CG_NO AS "MENUCGNO"
+	FROM
+		CAFE_MENU M, CAFE_ATTACH CA
+	WHERE
+		M.MENU_NO=CA.MENU_NO
+	AND
+		CA.MENU_CG_NO=#{menuCgNo}
+</select>
+<!-- 사용자 메뉴 모달 글 조회<윤영> -->
+<select id="getUserMenuDetail" parameterType="MenuDTO" resultType="MenuDTO">
+	SELECT
+		MENU_NO AS "MENUNO",
+		MENU_NAME AS "MENUNAME",
+		MENU_INTRO AS "MENUINTRO",
+		MENU_PRICE AS "MENUPRICE",
+		MENU_AMOUNT AS "MENUAMOUNT",
+		MENU_CG_NO AS "MENUCGNO",
+		REGNO AS "REGNO",
+		REGDATE AS "REGDATE",
+		UPDNO AS "UPDNO",
+		UPDDATE AS "UPDDATE"
+	FROM
+		CAFE_MENU
+	WHERE
+		MENU_NO=#{menuNo}
+</select>
+<!-- 사용자 메뉴 모달 사진 조회<윤영> -->
+<select id="getUserMenuDetailImg" parameterType="CafeAttachDTO" resultType="CafeAttachDTO">
+	SELECT
+		CAFE_ATTACH_NO AS "CAFEATTACHNO", 
+		CAFE_NO AS "CAFENO",
+		MENU_NO AS "MENUNO",
+		CAFE_IMG_ORG AS "CAFEIMGORG",
+		CAFE_IMG_PATH AS "CAFEIMGPATH",
+		CAFE_IMG AS "CAFEIMG",
+		MENU_CG_NO AS "MENUCGNO"
+	FROM
+		CAFE_ATTACH
+	WHERE
+		MENU_NO=#{menuNo}
+</select>
+</mapper>

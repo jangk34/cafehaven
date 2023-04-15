@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poly.persistance.mapper.OrderMapper">
+<insert id="insertOrderInfo" parameterType="OrderInfoDTO">
+INSERT INTO CAFE_ORDER_INFO
+(
+	ORD_INFO_NO,
+	ORD_TOT_PRICE,
+	REAL_ORD_PRICE,
+	ORD_PAYMENT,
+	ORD_DT_DATE,
+	ORD_STAT,
+	USR_RCV_TIME,
+	RCV_YN,
+	USER_NO,
+	REGNO,
+	REGDATE,
+	ORD_TID
+) VALUES (
+	#{ordInfoNo},
+	#{ordTotPrice},
+	#{realOrdPrice},
+	#{ordPayment},
+	SYSDATE,
+	'1',
+	#{usrRcvTime},
+	#{rcvYn},
+	#{userNo},
+	#{userNo},
+	SYSDATE,
+	#{ordTid}
+)
+</insert>
+<insert id="insertOrderItem" parameterType="list">
+INSERT INTO CAFE_ORDER_ITEM
+(
+	ORD_INFO_NO,
+	MENU_NO,
+	ORD_AMNT,
+	REGNO,
+	REGDATE
+) VALUES (
+	<foreach collection="list" item="item" index="index" separator=",">
+		((SELECT 
+			ORD_INFO_NO
+				FROM CAFE_ORDER_INFO
+				WHERE USER_NO = #{item.regNo} AND ROWNUM = 1
+				ORDER BY REGDATE
+		),
+		#{item.menuNo},
+		#{item.ordAmnt},
+		#{item.regNo},
+		SYSDATE
+		)
+	</foreach>
+)
+</insert>
+<select id="selectOrderList" parameterType="String" resultType="TotalOrderInfoDTO">
+SELECT
+	ORD_INFO_NO,
+	ORD_TOT_PRICE,
+	TO_CHAR(ORD_DT_DATE, 'YYYY-MM-DD HH24:mi:ss'),
+	ORD_STAT
+FROM
+	CAFE_ORDER_INFO
+WHERE
+	USER_NO = #{userNo}
+	AND ROWNUM <![CDATA[<=]]> 5
+ORDER BY
+	ORD_INFO_NO
+</select>
+<select id="selectMenuList" parameterType="String" resultType="TotalOrderItemDTO">
+SELECT
+	CM.MENU_NAME,
+	CM.MENU_PRICE,
+	COT.ORD_AMNT
+FROM
+	CAFE_ORDER_INFO COI,
+	CAFE_ORDER_ITEM COT,
+	CAFE_MENU CM
+WHERE
+	COT.ORD_INFO_NO = COI.ORD_INFO_NO
+	AND
+		COI.ORD_INFO_NO = #{orderNo}
+	AND
+		COT.MENU_NO = CM.MENU_NO
+</select>
+<select id="getTotalOrderInfoList" resultType="TotalOrderInfoDTO">
+SELECT
+	COI.ORD_INFO_NO AS ordInfoNo,
+	COI.ORD_TOT_PRICE AS ordTotPrice,
+	COI.ORD_PAYMENT AS ordPayment,
+	TO_CHAR(COI.ORD_DT_DATE, 'YYYY-MM-DD HH24:mi:ss') AS ordDtDate,
+	COI.ORD_STAT AS ordStat,
+	COI.USR_RCV_TIME AS usrRcvTime,
+	COI.RCV_TIME AS rcvTime,
+	COI.RCV_YN AS rcvYn,
+	COI.ORD_CANCEL_YN AS ordCancelYn,
+	COI.ORD_CANCEL_TIME AS ordCancelTime,
+	UC.NAME AS userName,
+	COI.ORD_TID AS ordTid
+FROM
+	USER_CAFE UC, CAFE_ORDER_INFO COI
+WHERE
+	COI.ORD_INFO_NO = COI.ORD_INFO_NO
+	AND UC.USER_NO = COI.USER_NO
+	AND COI.ORD_STAT <![CDATA[<]]>4
+</select>
+<select id="getTotalOrderItemList" resultType="TotalOrderItemDTO" parameterType="string">
+SELECT
+	CM.MENU_NAME AS menuName,
+	CM.MENU_PRICE AS menuPrice,
+	COT.ORD_AMNT AS ordAmnt
+FROM
+	CAFE_ORDER_INFO COI,
+	CAFE_ORDER_ITEM COT,
+	CAFE_MENU CM
+WHERE
+	COT.ORD_INFO_NO = COI.ORD_INFO_NO
+	AND
+		COI.ORD_INFO_NO = #{orderNo}
+	AND
+		COT.MENU_NO = CM.MENU_NO
+</select>
+<select id="getOrderNo" resultType="OrderInfoDTO" parameterType="String">
+SELECT
+	ORD_INFO_NO
+FROM
+	CAFE_ORDER_INFO
+WHERE
+	USER_NO = #{userNo}
+	AND
+		ROWNUM = 1
+ORDER BY
+	REGDATE
+<!-- SELECT
+	ORD_INFO_NO
+FROM
+	CAFE_ORDER_INFO
+WHERE
+	USER_NO = #{userNo}
+ORDER BY
+	REGDATE
+DESC
+	LIMIT 1 -->
+</select>
+<select id="getOrdItem" parameterType="OrderInfoDTO" resultType="OrderItemDTO">
+SELECT 
+	M.MENU_NAME,
+	O.ORD_AMNT
+FROM
+	CAFE_ORDER_ITEM O,
+	CAFE_MENE M
+WHERE
+	O.MENU_NO = M.MENU_NO
+	AND
+		O.ORD_INFO_NO = #{ordInfoNo}
+</select>
+<!-- 주문등록 -->
+<!-- <insert id="insertOrder" parameterType="OrderDTO">
+INSERT INTO CAFE_ORDER
+(
+	ORD_INFO_NO,
+	ORD_TOT_PRICE,
+	ORD_PAYMENT,
+	ORD_DT_DATE,
+	ORD_STAT,
+	USR_RCV_TIME,
+	RCV_TIME,
+	ORD_CANCEL_YN,
+	ORD_CANCEL_TIME,
+	ORD_TID,
+	ORD_REQ,
+	REGDATE,
+	REGNO,
+	ORDER_ITEM_NO
+) VALUES (
+	ORD_INFO_NO.NEXTVAL,
+	#{ordTotPrice}.
+	#{ordPayment},
+	#{ordDtDate},
+	#{ordStat},
+	#{usrRcvTime},
+	#{rcvTime},
+	#{ordCancelYn},
+	#{ordCancelTime},
+	#{ordTid},
+	#{ordReq},
+	SYSDATE,
+	ORD_INFO_NO.NEXTVAL,
+	#{orderItemNo}
+)
+</insert> -->
+<!-- 주문목록 -->
+<!-- <select id="getOrderList" resultType="OrderDTO">
+SELECT
+	ORD_INFO_NO AS "ordInfoNo",
+	ORD_TOT_PRICE AS "ordTotPrice",
+	ORD_PAYMENT AS "ordPayment",
+	ORD_DT_DATE AS "ordDtDate",
+	ORD_STAT AS "ordStat",
+	USR_RCV_TIME AS "usrRcvTime",
+	RCV_TIME AS "rcvTime",
+	ORD_CANCEL_YN AS "ordCancelYn",
+	ORD_CANCEL_TIME AS "ordCancelTime",
+	ORD_TID AS "ordTid",
+	ORD_REQ AS "ordReq",
+	REGDATE AS "regDate",
+	REGNO AS "regNo",
+	ORDER_ITEM_NO AS "orderItemNo"
+FROM CAFE_ORDER
+</select> -->
+<!-- orderDirect -->
+<!-- <select id="getOrderDirect" parameterType="MenuDTO" resultType="OrderDTO">
+SELECT
+	M.MENU_NO,
+	M.MENU_NAME,
+	M.MENU_INTRO,
+	M.MENU_PRICE,
+	M.MENU_AMOUNT,
+	M.MENU_CG_NO
+FROM
+	CAFE_MENU M
+WHERE
+	M.MENU_NO=#{menuNo}
+</select> -->
+</mapper>

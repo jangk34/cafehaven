@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.ReviewMapper">
+
+<!-- ajax 리뷰 등록 -->
+<insert id="insertReview" parameterType="ReviewDTO">
+INSERT INTO 
+	CAFE_REVIEW 
+	(REVIEW_NO,CAFE_REVIEW,CAFE_STAR,MENU_NAME,REGNO,REGDATE)
+VALUES
+	(RV_NO.NEXTVAL,#{cafeReview},#{cafeStar},#{menuName},#{regNo},SYSDATE)
+</insert>
+<!--  ajax 리뷰 등록후 리스트 -->
+<select id="getReview" parameterType="ReviewDTO" resultType="ReviewDTO">
+SELECT U.NAME AS "RVWRITER",	
+	R.REVIEW_NO AS "REVIEWNO",
+	R.CAFE_REVIEW AS "CAFEREVIEW",
+	R.CAFE_STAR AS "CAFESTAR",
+	R.MENU_NAME AS "MENUNAME",
+	R.REGNO AS "REGNO",
+	R.REGDATE AS "REGDATE"
+FROM USER_CAFE U 
+INNER JOIN CAFE_REVIEW R
+ON U.USER_NO = R.REGNO
+ORDER BY REGDATE DESC
+</select>
+<!--   등록전  리스트 보여주기 -->
+
+<select id="getReviewList" resultType="ReviewDTO">
+SELECT U.NAME AS "RVWRITER",	
+	R.REVIEW_NO AS "REVIEWNO",
+	R.CAFE_REVIEW AS "CAFEREVIEW",
+	R.CAFE_STAR AS "CAFESTAR",
+	R.MENU_NAME AS "MENUNAME",
+	R.REGNO AS "REGNO",
+	R.REGDATE AS "REGDATE"
+FROM USER_CAFE U 
+INNER JOIN CAFE_REVIEW R
+ON U.USER_NO = R.REGNO
+ORDER BY REGDATE DESC
+</select>
+
+<select id="userWriteList" resultType="ReviewDTO">
+SELECT U.NAME AS "RVWRITER",
+	   R.REVIEW_NO AS "REVIEWNO",
+	   R.CAFE_REVIEW AS "CAFEREVIEW",
+	   R.CAFE_STAR AS "CAFESTAR",
+	   R.MENU_NAME AS "MENUNAME",
+	   R.REGNO AS "REGNO",
+	   R.REGDATE AS "REGDATE"
+	FROM USER_CAFE U 
+	INNER JOIN CAFE_REVIEW R
+	ON U.USER_NO = R.REGNO
+	ORDER BY REGDATE DESC
+</select>
+
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.NoticeMapper">
+	<!-- 게시판 등록 -->
+	<insert id="insertNotice" parameterType="NoticeDTO">
+	INSERT INTO NOTICE_TB
+	(
+	NT_NO,
+	NT_TITLE,
+	NT_CONT,
+	NT_WRITER,
+	NT_COUNT,
+	NT_SORT,
+	REGNO,
+	REGDATE,
+	QA_GRPNO
+	)
+	VALUES
+	(NT_NO.NEXTVAL,#{ntTitle},#{ntCont},#{ntWriter},0,#{ntSort},#{regNo},SYSDATE,#{qaGrpNo})
+	</insert>
+	<!-- 게시판 목록 리스트 -->
+
+	<select id="getNoticeList"  resultType="NoticeDTO">
+
+	SELECT U.NAME AS "NTWRITER",
+	N.NT_TITLE AS "NTTITLE",
+	N.NT_CONT AS "NTCONT",
+	N.REGDATE AS "REGDATE",
+	N.REGNO AS "REGNO",
+	N.NT_NO AS "NTNO",
+	N.UPDDATE AS "UPDDATE",
+	N.UPDNO AS "UPDNO",
+	NVL(N.NT_COUNT,0) AS "NTCOUNT",
+	N.NT_SORT AS "NTSORT",
+	N.QA_GRPNO AS "QAGRPNO"
+	FROM USER_CAFE U
+	INNER JOIN NOTICE_TB N
+	ON U.USER_NO = N.REGNO 
+	ORDER BY N.UPDDATE DESC, N.REGDATE DESC
+	</select>
+	<!-- 게시판상세 -->
+	<select id="getNoticeDetail"  parameterType="NoticeDTO" resultType="NoticeDTO">
+	
+	SELECT  U.NAME 				AS "NTWRITER",
+			N.NT_NO				AS "NTNO",
+			N.NT_TITLE			AS "NTTITLE",
+			N.NT_CONT			AS "NTCONT",
+			N.REGNO				AS "REGNO",
+			N.REGDATE			AS "REGDATE",
+			N.UPDDATE			AS "UPDDATE",
+			N.UPDNO				AS "UPDNO",
+			NVL(N.NT_COUNT,0) 	AS "NTCOUNT",
+			N.NT_SORT			AS "NTSORT",
+			N.QA_GRPNO			AS "QAGRPNO"
+	   FROM USER_CAFE U
+ 	  INNER JOIN NOTICE_TB N
+  	     ON U.USER_NO =#{regNo} AND NT_NO=#{ntNo} 
+	</select>
+	
+	
+	<!-- 게시판 삭제 -->
+	<delete id="deleteNotice" parameterType="string">
+	DELETE FROM NOTICE_TB WHERE NT_NO=#{ntNo}
+	</delete>
+	
+	<!-- 게시판 수정 -->
+	<update id="updateNotice" parameterType="NoticeDTO">
+	UPDATE NOTICE_TB
+	SET NT_TITLE=#{ntTitle},
+		NT_CONT=#{ntCont},
+		REGDATE=TO_DATE(#{regDate},'YYYY-MM-DD HH24:mi:ss'),<!--  이부분이 문제 다른 것들은 업데이트 되었는데  #{regDate} 가 string으로 받아오니 이걸 date 형식으로 -->
+		UPDDATE=SYSDATE,
+		UPDNO=#{regNo}	
+	WHERE REGNO=#{regNo} AND NT_NO=#{ntNo}
+		
+	
+	</update>
+	<!-- TO_CHAR(SYSDATE, 'YYYY-MM-DD') -->
+	
+	<!-- 게시판카운트 -->
+	<update id ="updateNoticeCount" parameterType="string">
+	UPDATE NOTICE_TB
+	SET NT_COUNT =NT_COUNT+1
+	WHERE NT_NO=#{ntNo}
+	</update>
+
+<!-- 	 답변 게시판 상세 -->
+	<select id="getAnswerNoticeDetail" parameterType="string" resultType="NoticeDTO">
+	   
+	SELECT  NT_TITLE AS "NTTITLE" ,NT_CONT AS "NTCONT", REGDATE 
+	FROM NOTICE_TB
+	WHERE REGNO=1 AND QA_GRPNO=#{qaGrpNo}
+	START WITH NT_SORT='q'
+	CONNECT BY PRIOR NT_NO=QA_GRPNO
+	
+	</select>
+<!--  답글 중복체크 -->
+	<select id="getAnswerCheck" parameterType="string" resultType="int">
+	SELECT COUNT(*)
+	FROM NOTICE_TB
+	WHERE QA_GRPNO=#{ntNo}
+	
+	</select>
+
+	<!-- 마이페이지 > 내가 쓴 글 보기 -->
+	<select id="userWriteList"  resultType="NoticeDTO">
+	SELECT NT_NO AS ntNo,
+		   NT_TITLE AS ntTitle,
+		   NT_CONT AS ntCont,
+		   NT_COUNT AS ntCount,
+		   NT_WRITER AS ntWriter,
+		   NT_SORT AS ntSort,
+		   REGDATE AS regDate,
+		   REGNO AS regNo,
+		   UPDDATE AS updDate,
+		   UPDNO AS updNo,
+		   QA_GRPNO AS qaGrpNo
+		FROM NOTICE_TB
+	</select>
+	<!-- 질문에 대한 답변을 달았는지 여부 -->
+<!-- 	<update>
+	UPDATE NOTICE_TB
+  SET NT_EXP_YN='y'
+  WHERE NT_SORT='q' AND NT_NO=1
+	</update> -->
+</mapper>

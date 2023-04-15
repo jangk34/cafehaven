@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.CafeMapper">
+<!-- 메뉴등록  전체 -->
+
+<!-- 오라클 mysql 쓰는법 다름 http://egloos.zum.com/kamsi76/v/377946 일단 상관없음-->
+
+<!-- 업데이트 글  -->
+<update id="updateCafeDetail" parameterType="CafeInfoDTO"> 
+UPDATE 
+	CAFE_INFO
+SET
+	CAFE_NAME=#{cafeName},    <!-- DTO명과 대소문자까지 동일해야함 -->
+	CAFE_CONTENT=#{cafeContent},
+	CAFE_ADDR1=#{cafeAddr1},
+	CAFE_ADDR2=#{cafeAddr2},
+	CAFE_POSTADDR=#{cafepostAddr},
+	CAFE_TEL=#{cafeTel},
+	CAFE_OPT=#{cafeOpt},
+	CAFE_CLT=#{cafeClt},
+	CAFE_OPENDATE=#{openDate},
+	CAFE_LAT=#{cafeLat},
+	CAFE_HAR=#{cafeHar},
+	
+	REGDATE=SYSDATE,<!--  이부분이 문제 다른 것들은 업데이트 되었는데  #{regDate} 가 string으로 받아오니 이걸 date 형식으로 TO_DATE(#{regDate},'YYYY-MM-DD HH24:mi:ss')-->
+	UPDDATE=SYSDATE,
+	UPDNO=1	
+WHERE
+	CAFE_NO=#{cafeNo}
+</update>
+<!-- MENU_CG_NO=#{menuCgNo}, -->
+<!-- 이미지 파일  삭제 -->
+<delete id="deleteCafeImg" parameterType="CafeAttachDTO">
+DELETE FROM
+	CAFE_ATTACH
+WHERE CAFE_NO=#{cafeNo}
+</delete>
+<!--이미지 파일 삭제 후등록 -->
+<insert id="insertCafeImg" parameterType="CafeAttachDTO">
+
+INSERT INTO
+CAFE_ATTACH(    
+CAFE_ATTACH_NO,
+CAFE_NO,
+CAFE_IMG,
+CAFE_IMG_PATH,
+CAFE_IMG_ORG,
+REGNO,
+REGDATE,
+UPDNO,
+UPDDATE
+)VALUES(
+CAFE_ATTACH_NO.NEXTVAL,
+#{cafeNo},
+#{cafeImg},
+#{cafeImgPath},
+#{cafeImgOrg},
+1,
+<!-- TO_DATE(#{regDate},'YYYY-MM-DD HH24:mi:ss'), -->
+SYSDATE,
+1,
+SYSDATE
+)
+</insert>
+
+<!-- 카페 번호 전송 -->
+<select id="getCafeInfoDetail" parameterType="CafeInfoDTO" resultType="CafeInfoDTO"> <!-- 파라미터 타입은 가져올값  -->
+SELECT
+	CAFE_NO AS "CAFENO",
+	CAFE_NAME AS "CAFENAME",
+	CAFE_CONTENT AS "CAFECONTENT",
+	CAFE_ADDR1 AS "CAFEADDR1",
+	CAFE_ADDR2 AS "CAFEADDR2",
+	CAFE_POSTADDR AS "CAFEPOSTADDR",
+	CAFE_OPT AS "CAFEOPT",
+	CAFE_CLT AS "CAFECLT",
+	CAFE_TEL AS "CAFETEL",
+	CAFE_OPENDATE AS "OPENDATE",
+	CAFE_LAT AS "CAFELAT",
+	CAFE_HAR AS "CAFEHAR",
+	REGNO,
+	REGDATE,
+	UPDNO,
+	UPDDATE
+FROM
+	CAFE_INFO
+	WHERE
+	CAFE_NO=#{cafeNo}
+</select>
+
+<!-- 카페 이미지 번호 전송 -->
+<select id="getCafeInfoAttach" parameterType="CafeAttachDTO" resultType="CafeAttachDTO">
+SELECT
+	CAFE_ATTACH_NO AS "CAFEATTACHNO",
+	CAFE_NO AS "CAFENO",
+	MENU_NO AS "MENUNO",
+	CAFE_IMG_ORG AS "CAFEIMGORG",
+	CAFE_IMG_PATH AS "CAFEIMGPATH",
+	CAFE_IMG AS "CAFEIMG",
+	REGNO,
+	REGDATE,
+	UPDNO,
+	UPDDATE
+FROM
+	CAFE_ATTACH
+	WHERE
+	CAFE_NO=#{cafeNo}		
+</select>
+
+</mapper>
